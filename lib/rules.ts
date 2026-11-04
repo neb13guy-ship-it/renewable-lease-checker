@@ -105,7 +105,7 @@ export function findRestrictions(input: SiteInput): Restriction[] {
   if (PROTECTED_LAND_CATEGORIES.includes(input.landCategory)) {
     restrictions.push({
       citation: requireArticle(1),
-      reason: `지목이 '${input.landCategory}'로 농지·임야에 해당해 보존 필요가 높아 대부가 제한될 수 있습니다.`,
+      reason: `지목 '${input.landCategory}'은(는) 농지·임야에 해당해 보존 필요가 높아 대부가 제한될 수 있습니다.`,
     });
   }
 
