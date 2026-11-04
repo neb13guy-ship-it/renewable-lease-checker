@@ -46,7 +46,7 @@ export function verifyAiAnswer(answer: AiAnswer, restrictions: Restriction[], me
 
   // Plan SC: 근거 조항 제시율 100% — 근거가 없거나 지침에 없는 조항이면 판정하지 않는다.
   if (hasUnknownArticle || aiCitations.length === 0) {
-    return hold("AI의 답에서 지침의 근거 조항을 확인하지 못해 판정을 보류합니다.");
+    return hold("AI의 답에서 지침의 기본검토사항을 확인하지 못해 판정을 보류합니다.");
   }
 
   // "불가"는 코드 규칙으로만 확정한다. (여기까지 온 건은 불가 규칙에 걸리지 않은 건이다.)

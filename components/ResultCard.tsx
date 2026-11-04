@@ -1,4 +1,5 @@
-// Design Ref: §5.1, §5.3, §5.4 — 판별 결과 표시: 판정 배지, 설명, 근거 조항, 제한 사유, 참고 메모.
+// Design Ref: §5.1, §5.3, §5.4 — 판별 결과 표시: 판정 배지, 설명, 기본검토사항(근거), 제한 사유, 참고 메모.
+// 화면에서는 "근거 조항"을 "기본검토사항"이라 부르고, "제N조" 대신 숫자(1., 2., ...)로만 표시한다.
 // Plan 작업 10번: 결과 화면. 서버에서 받은 결과(JudgeResult)를 그대로 보여 주기만 한다.
 
 import type { Citation, JudgeResult, Verdict } from "@/types/judge";
@@ -19,7 +20,7 @@ function CitationList({ title, items }: { title: string; items: Citation[] }) {
       <ul className="mt-2 flex flex-col gap-2">
         {items.map((item) => (
           <li key={item.article} className="rounded-md bg-zinc-50 px-4 py-3 text-base text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200">
-            <span className="font-medium">제{item.article}조</span> “{item.text}”
+            <span className="font-medium">{item.article}.</span> “{item.text}”
           </li>
         ))}
       </ul>
@@ -38,7 +39,7 @@ export default function ResultCard({ result }: { result: JudgeResult }) {
 
       <p className="text-base leading-7 text-zinc-800 dark:text-zinc-200">{result.reasonSummary}</p>
 
-      <CitationList title="근거 조항" items={result.citations} />
+      <CitationList title="기본검토사항" items={result.citations} />
       <CitationList title="제한 사유" items={result.restrictions} />
 
       {result.memo.trim() !== "" && (
