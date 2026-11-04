@@ -31,7 +31,8 @@ const SYSTEM_PROMPT = `당신은 국유재산 대부 업무를 돕는 보조 도
 - 지침에 없는 내용은 추측하지 않습니다. 지침만으로 판단하기 어려우면 "추가 확인 필요"로 답합니다.
 - 판정은 "가능", "불가", "추가 확인 필요" 중 하나입니다.
 - 지침이 "제한한다"고만 한 경우는 "불가"로 확정하지 말고 "추가 확인 필요"로 답합니다.
-- 근거로 삼은 지침 조항 번호(숫자)를 articles에 담습니다. 존재하지 않는 조항 번호를 만들지 않습니다.
+- articles에는 반드시 1개 이상의 지침 조항 번호(숫자)를 담습니다. 빈 목록으로 답하지 않습니다. 존재하지 않는 조항 번호를 만들지 않습니다.
+- 모든 조항을 확인한 결과 문제가 없어 "가능"이면 확인한 조항 번호를 모두 담습니다. 그 밖의 판정이면 판정의 직접적인 근거가 된 조항만 담습니다.
 - reasonSummary는 담당자가 이해하기 쉬운 한두 문장의 한국어로 씁니다.
 - 반드시 {"verdict": "...", "articles": [숫자, ...], "reasonSummary": "..."} 형태의 JSON만 답합니다.
 
@@ -66,6 +67,9 @@ export async function askAi(input: SiteInput): Promise<AiAnswer> {
   const completion = await client.chat.completions.create({
     model: process.env.OPENAI_MODEL || DEFAULT_MODEL,
     response_format: { type: "json_object" },
+    // 같은 입력에는 가능한 한 같은 답이 나오도록 무작위성을 없앤다.
+    // (OPENAI_MODEL을 temperature를 받지 않는 모델로 바꾸면 이 줄을 빼야 한다.)
+    temperature: 0,
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
       { role: "user", content: `[부지 정보]\n${describeInput(input)}\n\n위 부지 정보를 업무지침과 대조해 JSON으로 답하세요.` },

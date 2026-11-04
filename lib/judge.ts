@@ -81,6 +81,13 @@ export async function judge(
   const outcome = evaluateRules(input);
   if ("final" in outcome) return outcome.final;
 
-  const answer = await ask(input);
+  let answer = await ask(input);
+  // 근거 조항이 비었거나 지침에 없는 번호만 있으면, 한 번만 다시 묻는다. (AI가 가끔 근거를 빠뜨리기 때문)
+  if (!hasValidArticle(answer)) answer = await ask(input);
   return verifyAiAnswer(answer, outcome.pending, input.memo);
+}
+
+/** AI 답에 지침에 실제로 있는 조항 번호가 하나라도 있는지 */
+function hasValidArticle(answer: AiAnswer): boolean {
+  return answer.articles.some((article) => findArticle(article) !== undefined);
 }
