@@ -1,0 +1,39 @@
+{
+  "설명": "시험 사례 20건. 담당자가 정답(expected)을 미리 정해 둔 사례로, 판별 결과가 정답과 일치하는지 점검한다. 구성은 DESIGN §8.2를 따른다. 정답은 작성자가 PRD 규칙에 따라 정했으며, 실제 업무와 다르면 고친다.",
+  "공통_모두통과": {
+    "landCategory": "대",
+    "siteStatus": "기타",
+    "housingWithin200m": false,
+    "neighborOwner": "same",
+    "isProtectedZone": false,
+    "localPermitPossible": true,
+    "memo": ""
+  },
+  "cases": [
+    { "id": 1, "group": "주택 있음", "name": "주택 있음, 나머지는 모두 통과 조건", "input": { "landCategory": "대", "siteStatus": "기타", "housingWithin200m": true, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "불가" },
+    { "id": 2, "group": "주택 있음", "name": "주택 있음, 다른 칸은 모두 빈칸", "input": { "housingWithin200m": true }, "expected": "불가" },
+    { "id": 3, "group": "주택 있음", "name": "주택 있음 + 보존 지역", "input": { "landCategory": "대", "siteStatus": "기타", "housingWithin200m": true, "neighborOwner": "same", "isProtectedZone": true, "localPermitPossible": true }, "expected": "불가" },
+    { "id": 4, "group": "주택 있음", "name": "주택 있음 + 인접지 소유자 다름", "input": { "landCategory": "잡종지", "siteStatus": "대부중", "housingWithin200m": true, "neighborOwner": "different", "isProtectedZone": false, "localPermitPossible": true }, "expected": "불가" },
+
+    { "id": 5, "group": "인접지 소유자 다름", "name": "인접지 소유자 다름, 나머지는 모두 통과 조건", "input": { "landCategory": "대", "siteStatus": "기타", "housingWithin200m": false, "neighborOwner": "different", "isProtectedZone": false, "localPermitPossible": true }, "expected": "불가" },
+    { "id": 6, "group": "인접지 소유자 다름", "name": "인접지 소유자 다름 + 지목 전", "input": { "landCategory": "전", "siteStatus": "기타", "housingWithin200m": false, "neighborOwner": "different", "isProtectedZone": false, "localPermitPossible": true }, "expected": "불가" },
+    { "id": 7, "group": "인접지 소유자 다름", "name": "인접지 소유자 다름 + 지자체 허가 아니오", "input": { "landCategory": "대", "siteStatus": "무단점유", "housingWithin200m": false, "neighborOwner": "different", "isProtectedZone": false, "localPermitPossible": false }, "expected": "불가" },
+    { "id": 8, "group": "인접지 소유자 다름", "name": "인접지 소유자 다름, 다른 칸은 빈칸", "input": { "neighborOwner": "different" }, "expected": "불가" },
+
+    { "id": 9, "group": "필수 항목 누락", "name": "지목만 빈칸", "input": { "siteStatus": "기타", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "추가 확인 필요" },
+    { "id": 10, "group": "필수 항목 누락", "name": "보존 지역 여부만 미입력", "input": { "landCategory": "대", "siteStatus": "기타", "housingWithin200m": false, "neighborOwner": "same", "localPermitPossible": true }, "expected": "추가 확인 필요" },
+    { "id": 11, "group": "필수 항목 누락", "name": "필수 칸이 모두 빈칸(메모만 있음)", "input": { "memo": "메모만 입력" }, "expected": "추가 확인 필요" },
+
+    { "id": 12, "group": "보존 지목·지역", "name": "지목 전(농지)", "input": { "landCategory": "전", "siteStatus": "기타", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "추가 확인 필요" },
+    { "id": 13, "group": "보존 지목·지역", "name": "지목 임야", "input": { "landCategory": "임야", "siteStatus": "사용제한", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "추가 확인 필요" },
+    { "id": 14, "group": "보존 지목·지역", "name": "현상보존필요지역(보존 지역 예)", "input": { "landCategory": "대", "siteStatus": "기타", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": true, "localPermitPossible": true }, "expected": "추가 확인 필요" },
+    { "id": 15, "group": "보존 지목·지역", "name": "지목 답 + 보존 지역 예", "input": { "landCategory": "답", "siteStatus": "대부중", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": true, "localPermitPossible": true }, "expected": "추가 확인 필요" },
+
+    { "id": 16, "group": "지자체 허가 아니오", "name": "지자체 허가 아니오", "input": { "landCategory": "대", "siteStatus": "기타", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": false }, "expected": "추가 확인 필요" },
+    { "id": 17, "group": "지자체 허가 아니오", "name": "지자체 허가 아니오 + 보존 지역", "input": { "landCategory": "도로", "siteStatus": "기타", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": true, "localPermitPossible": false }, "expected": "추가 확인 필요" },
+
+    { "id": 18, "group": "모든 조건 통과", "name": "지목 대, 현황 기타", "input": { "landCategory": "대", "siteStatus": "기타", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "가능" },
+    { "id": 19, "group": "모든 조건 통과", "name": "지목 공장용지, 현황 대부중", "input": { "landCategory": "공장용지", "siteStatus": "대부중", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "가능" },
+    { "id": 20, "group": "모든 조건 통과", "name": "지목 잡종지, 현황 사용제한", "input": { "landCategory": "잡종지", "siteStatus": "사용제한", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "가능" }
+  ]
+}
