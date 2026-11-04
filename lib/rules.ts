@@ -1,6 +1,6 @@
 // Design Ref: §2.2 ②③ — 코드로 확정하는 규칙들(불가 규칙, 필수 입력 누락 검사).
 // Plan 작업 3번: 필수 입력 6개 누락 검사. Plan 작업 4번: "불가" 규칙 판정.
-// (제한 사유 규칙은 이후 작업에서 이 파일에 이어서 추가한다.)
+// Plan 작업 5번: 제한 사유 규칙 (보존 현황·보존 지역·지자체 허가 "아니오").
 // 이 파일은 AI 호출 코드를 모른다. 그래서 AI 없이도 규칙만 따로 시험할 수 있다.
 
 import { findArticle } from "@/data/guideline";
@@ -81,4 +81,48 @@ export function findHardRejections(input: SiteInput): HardRejection[] {
   }
 
   return rejections;
+}
+
+/** 제한 사유 한 개. "불가"로 확정하지 않고 "추가 확인 필요"와 함께 보여 줄 사유이다. */
+export type Restriction = HardRejection;
+
+/**
+ * 보존 필요가 높다고 보는 부지 현황. (DESIGN §3.2 제안 목록 기준이며, 선택 목록이 확정되면 함께 고친다.)
+ * 지침 제1조의 "농지, 임야 등"에서 "등"에 무엇이 들어가는지는 아직 정해지지 않았다.
+ */
+export const PROTECTED_SITE_STATUSES: readonly string[] = ["농지", "임야"];
+
+/**
+ * 제한 사유를 모두 돌려준다. 하나도 없으면 빈 목록이다.
+ * 제한 사유가 있어도 "불가"로 확정하지 않고, 결과는 최소 "추가 확인 필요"가 된다.
+ * 값이 비어 있는 항목은 제한 사유가 아니다. (빈칸은 findMissingFields가 다룬다.)
+ */
+export function findRestrictions(input: SiteInput): Restriction[] {
+  const restrictions: Restriction[] = [];
+
+  // Plan SC: FR-05 — 농지·임야 등 보존 필요가 높은 현황은 제한 (지침 제1조)
+  if (PROTECTED_SITE_STATUSES.includes(input.siteStatus)) {
+    restrictions.push({
+      citation: requireArticle(1),
+      reason: `부지 현황이 '${input.siteStatus}'로 보존 필요가 높아 대부가 제한될 수 있습니다.`,
+    });
+  }
+
+  // Plan SC: FR-05 — 토지이용계획상 보존이 필요한 지역은 제한 (지침 제3조)
+  if (input.isProtectedZone === true) {
+    restrictions.push({
+      citation: requireArticle(3),
+      reason: "토지이용계획상 보존이 필요한 지역이라 대부가 제한될 수 있습니다.",
+    });
+  }
+
+  // Plan SC: 결정 사항 — 지자체 허가 가능 여부가 "아니오"이면 불가가 아니라 "추가 확인 필요" (지침 제5조)
+  if (input.localPermitPossible === false) {
+    restrictions.push({
+      citation: requireArticle(5),
+      reason: "지자체의 발전시설 허가 등이 가능한지 사전 확인 결과가 '아니오'라 추가 확인이 필요합니다.",
+    });
+  }
+
+  return restrictions;
 }
