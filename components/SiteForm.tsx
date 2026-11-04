@@ -1,7 +1,7 @@
 "use client";
 
 // Design Ref: §5.1, §5.4 — 부지 정보 입력 화면 (필수 6개 + 참고 메모).
-// Plan 작업 6번: 입력 화면. 아직 판별 기능과 연결하지 않았다(작업 7번 이후에 연결).
+// Plan 작업 6번: 입력 화면. Plan 작업 10번: [판별하기]를 누르면 입력을 바깥(JudgeScreen)으로 넘겨 판별 API에 연결한다.
 
 import { useState } from "react";
 import { LAND_CATEGORIES, SITE_STATUSES } from "@/data/siteOptions";
@@ -52,14 +52,18 @@ function RadioGroup<T extends string | boolean>(props: {
   );
 }
 
-export default function SiteForm() {
+export default function SiteForm(props: {
+  /** [판별하기]를 눌렀을 때, 입력한 내용을 넘겨받는다. */
+  onSubmit: (input: SiteInput) => void;
+  /** 판별하는 중이면 true (버튼을 잠근다) */
+  loading: boolean;
+}) {
+  const { onSubmit, loading } = props;
   const [input, setInput] = useState<SiteInput>(EMPTY_INPUT);
-  const [submitted, setSubmitted] = useState(false);
 
   /** 항목 하나만 바꾼다. */
   function update<K extends keyof SiteInput>(key: K, value: SiteInput[K]) {
     setInput((prev) => ({ ...prev, [key]: value }));
-    setSubmitted(false);
   }
 
   return (
@@ -67,8 +71,7 @@ export default function SiteForm() {
       className="flex flex-col gap-6"
       onSubmit={(event) => {
         event.preventDefault();
-        // 작업 7번 이후: 여기서 판별 API를 호출한다. 지금은 안내만 보여 준다.
-        setSubmitted(true);
+        onSubmit(input);
       }}
     >
       <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">부지 정보 입력</h2>
@@ -164,15 +167,11 @@ export default function SiteForm() {
       <div className="flex flex-col gap-3">
         <button
           type="submit"
-          className="self-start rounded-md bg-zinc-900 px-6 py-2.5 text-base font-medium text-white hover:bg-zinc-700 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          disabled={loading}
+          className="self-start rounded-md bg-zinc-900 px-6 py-2.5 text-base font-medium text-white hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-300"
         >
-          판별하기
+          {loading ? "확인하는 중..." : "판별하기"}
         </button>
-        {submitted && (
-          <p role="status" className="rounded-md bg-amber-50 px-4 py-3 text-base text-amber-900 dark:bg-amber-950 dark:text-amber-100">
-            입력은 잘 받았습니다. 판별 기능은 아직 연결되지 않았습니다.
-          </p>
-        )}
       </div>
     </form>
   );

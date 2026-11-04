@@ -1,5 +1,5 @@
 // Design Ref: §5.1 — 한 화면: 제목·안내 문구 → 부지 정보 입력 (결과 영역은 이후 작업에서 아래에 추가)
-import SiteForm from "@/components/SiteForm";
+import JudgeScreen from "@/components/JudgeScreen";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
             1차 확인용입니다. 최종 판단은 담당자가 합니다.
           </p>
         </header>
-        <SiteForm />
+        <JudgeScreen />
       </main>
     </div>
   );
