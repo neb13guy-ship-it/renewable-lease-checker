@@ -49,7 +49,7 @@ function describeInput(input: SiteInput): string {
     `부지 현황: ${input.siteStatus || "미입력"}`,
     `반경 200m 이내 주택: ${yesNo(input.housingWithin200m, "있음", "없음")}`,
     `인접지 소유자: ${owner}`,
-    `토지이용계획상 보존이 필요한 지역: ${yesNo(input.isProtectedZone, "예", "아니오")}`,
+    `토지이용계획 상 보전녹지지역 등 자연환경보호를 위한 현상보존필요지역:${yesNo(input.isProtectedZone, "예", "아니오")}`,
     `지자체 발전시설 허가 사전 확인 결과 가능 여부: ${yesNo(input.localPermitPossible, "예", "아니오")}`,
   ].join("\n");
 }

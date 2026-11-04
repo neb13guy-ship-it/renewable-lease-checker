@@ -109,11 +109,11 @@ export function findRestrictions(input: SiteInput): Restriction[] {
     });
   }
 
-  // Plan SC: FR-05 — 토지이용계획상 보존이 필요한 지역은 제한 (지침 제3조)
+  // Plan SC: FR-05 — 토지이용계획 상 현상보존필요지역은 제한 (지침 제3조)
   if (input.isProtectedZone === true) {
     restrictions.push({
       citation: requireArticle(3),
-      reason: "토지이용계획상 보존이 필요한 지역이라 대부가 제한될 수 있습니다.",
+      reason: "토지이용계획 상 보전녹지지역 등 현상보존필요지역에 해당해 대부가 제한될 수 있습니다.",
     });
   }
 

@@ -133,7 +133,7 @@ export default function SiteForm(props: {
       />
 
       <RadioGroup
-        legend="토지이용계획상 보존이 필요한 지역(자연환경보호 등)인가요?"
+        legend="토지이용계획 상 보전녹지지역 등 자연환경보호를 위한 현상보존필요지역인가요?"
         value={input.isProtectedZone}
         options={[
           { label: "예", value: true },
