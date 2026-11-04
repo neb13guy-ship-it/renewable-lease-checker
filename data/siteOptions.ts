@@ -4,5 +4,5 @@
 /** 지목 선택지 */
 export const LAND_CATEGORIES = ["대", "전", "답", "임야", "잡종지", "공장용지", "도로", "기타"] as const;
 
-/** 부지 현황 선택지 (농지·임야는 보존 필요가 높은 현황으로 본다 — lib/rules.ts 참고) */
-export const SITE_STATUSES = ["농지", "임야", "나대지", "건축물 있음", "기타"] as const;
+/** 부지 현황 선택지: 지금 그 땅이 어떤 상태로 쓰이고 있는지 (담당자와 정한 목록) */
+export const SITE_STATUSES = ["대부중", "무단점유", "사용제한", "기타"] as const;

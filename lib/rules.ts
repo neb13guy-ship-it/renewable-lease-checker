@@ -87,10 +87,11 @@ export function findHardRejections(input: SiteInput): HardRejection[] {
 export type Restriction = HardRejection;
 
 /**
- * 보존 필요가 높다고 보는 부지 현황. (DESIGN §3.2 제안 목록 기준이며, 선택 목록이 확정되면 함께 고친다.)
+ * 보존 필요가 높다고 보는 지목. 농지는 지목 '전'·'답', 임야는 지목 '임야'로 본다.
+ * (부지 현황 선택지가 대부중/무단점유/사용제한/기타로 바뀌면서, 제1조는 지목으로 판단한다.)
  * 지침 제1조의 "농지, 임야 등"에서 "등"에 무엇이 들어가는지는 아직 정해지지 않았다.
  */
-export const PROTECTED_SITE_STATUSES: readonly string[] = ["농지", "임야"];
+export const PROTECTED_LAND_CATEGORIES: readonly string[] = ["전", "답", "임야"];
 
 /**
  * 제한 사유를 모두 돌려준다. 하나도 없으면 빈 목록이다.
@@ -100,11 +101,11 @@ export const PROTECTED_SITE_STATUSES: readonly string[] = ["농지", "임야"];
 export function findRestrictions(input: SiteInput): Restriction[] {
   const restrictions: Restriction[] = [];
 
-  // Plan SC: FR-05 — 농지·임야 등 보존 필요가 높은 현황은 제한 (지침 제1조)
-  if (PROTECTED_SITE_STATUSES.includes(input.siteStatus)) {
+  // Plan SC: FR-05 — 농지·임야 등 보존 필요가 높은 재산은 제한 (지침 제1조). 지목 전·답·임야로 판단한다.
+  if (PROTECTED_LAND_CATEGORIES.includes(input.landCategory)) {
     restrictions.push({
       citation: requireArticle(1),
-      reason: `부지 현황이 '${input.siteStatus}'로 보존 필요가 높아 대부가 제한될 수 있습니다.`,
+      reason: `지목이 '${input.landCategory}'로 농지·임야에 해당해 보존 필요가 높아 대부가 제한될 수 있습니다.`,
     });
   }
 
