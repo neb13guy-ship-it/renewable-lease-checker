@@ -25,7 +25,7 @@ export const GUIDELINE_ARTICLES: readonly GuidelineArticle[] = [
   {
     article: 3,
     title: "토지이용계획",
-    text: "토지이용계획상 자연환경보호 등 보존이 필요한 지역은 대부를 제한한다.",
+    text: "토지이용계획 상 보전녹지지역 등 자연환경보호를 위한 현상보존필요지역은 대부를 제한한다.",
   },
   {
     article: 4,
