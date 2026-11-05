@@ -19,7 +19,7 @@ const EMPTY_INPUT: SiteInput = {
 };
 
 const selectClass =
-  "mt-2 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-base text-zinc-900 transition-colors focus:border-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/60 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-200";
+  "mt-2 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-base text-zinc-900 transition-colors focus:border-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-200";
 
 /** 입력 묶음 하나를 감싸는 칸. 칸마다 가는 선으로 나눠 읽기 쉽게 한다. */
 const groupClass = "border-t border-line pt-6 first:border-t-0 first:pt-0";
@@ -43,7 +43,7 @@ function RadioGroup<T extends string | boolean>(props: {
           // 라디오 버튼은 숨기고, 고른 칸 전체가 진하게 바뀌는 알약 모양 선택 버튼으로 보여 준다.
           <label
             key={option.label}
-            className="cursor-pointer rounded-full border border-line bg-white px-5 py-2 text-base text-zinc-800 transition-colors hover:border-zinc-500 has-[:checked]:border-zinc-900 has-[:checked]:bg-zinc-900 has-[:checked]:text-white has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-orange-400/60 dark:bg-zinc-900 dark:text-zinc-200 dark:has-[:checked]:border-zinc-100 dark:has-[:checked]:bg-zinc-100 dark:has-[:checked]:text-zinc-900"
+            className="cursor-pointer rounded-full border border-line bg-white px-5 py-2 text-base text-zinc-800 transition-colors hover:border-emerald-700 has-[:checked]:border-[var(--brand-deep)] has-[:checked]:bg-[var(--brand-deep)] has-[:checked]:text-white has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-amber-400/70 dark:bg-zinc-900 dark:text-zinc-200 dark:has-[:checked]:border-zinc-100 dark:has-[:checked]:bg-zinc-100 dark:has-[:checked]:text-zinc-900"
           >
             <input
               type="radio"
