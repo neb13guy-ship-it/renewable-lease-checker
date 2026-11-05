@@ -87,11 +87,20 @@ export function findHardRejections(input: SiteInput): HardRejection[] {
 export type Restriction = HardRejection;
 
 /**
- * 보존 필요가 높다고 보는 지목. 농지는 지목 '전'·'답', 임야는 지목 '임야'로 본다.
- * (부지 현황 선택지가 대부중/무단점유/사용제한/기타로 바뀌면서, 제1조는 지목으로 판단한다.)
+ * 보존 필요가 높다고 보는 지목. 농지는 지목 '전'·'답'·'과수원', 임야는 지목 '임야'로 본다.
+ * (제1조는 지목으로 판단하고, 부지 현황이 농지·임야인 경우도 함께 본다.)
  * 지침 제1조의 "농지, 임야 등"에서 "등"에 무엇이 들어가는지는 아직 정해지지 않았다.
  */
-export const PROTECTED_LAND_CATEGORIES: readonly string[] = ["전", "답", "임야"];
+export const PROTECTED_LAND_CATEGORIES: readonly string[] = ["전", "답", "과수원", "임야"];
+
+/** 보존 필요가 높다고 보는 부지 현황 (지침 1번의 "현황 농지, 임야") */
+export const PROTECTED_SITE_STATUSES: readonly string[] = ["농지", "임야"];
+
+/**
+ * 활용성이 낮지 않다고 보는 부지 현황. 지침 1번은 "일반적인 용도로의 활용성이 현저히 낮은 재산"이어야 대부할 수 있다고 하므로,
+ * 이런 현황은 "가능"으로 판정하지 않고 "추가 확인 필요"로 둔다. (담당자 결정: 공공용지도 활용성이 낮지 않은 쪽으로 본다.)
+ */
+export const HIGH_UTILITY_SITE_STATUSES: readonly string[] = ["대지", "공업용지", "상업용지", "주거용지", "개발용지", "공공용지"];
 
 /**
  * 제한 사유를 모두 돌려준다. 하나도 없으면 빈 목록이다.
@@ -106,6 +115,22 @@ export function findRestrictions(input: SiteInput): Restriction[] {
     restrictions.push({
       citation: requireArticle(1),
       reason: `지목 '${input.landCategory}'은(는) 농지·임야에 해당해 보존 필요가 높아 대부가 제한될 수 있습니다.`,
+    });
+  }
+
+  // 활용성이 낮지 않은 현황(대지·공업·상업·주거·개발용지)이면 활용성이 낮아야 한다는 1번 기준에 맞지 않는다.
+  if (HIGH_UTILITY_SITE_STATUSES.includes(input.siteStatus)) {
+    restrictions.push({
+      citation: requireArticle(1),
+      reason: `부지 현황이 '${input.siteStatus}'(으)로 일반적인 활용성이 낮지 않아, 활용성이 현저히 낮아야 한다는 기준에 맞는지 확인이 필요합니다.`,
+    });
+  }
+
+  // 부지 현황이 농지·임야이면 지목과 관계없이 같은 사유로 제한한다. (지침 1번: "현황 농지, 임야 등")
+  if (PROTECTED_SITE_STATUSES.includes(input.siteStatus)) {
+    restrictions.push({
+      citation: requireArticle(1),
+      reason: `부지 현황이 '${input.siteStatus}'(으)로 보존 필요가 높아 대부가 제한될 수 있습니다.`,
     });
   }
 
