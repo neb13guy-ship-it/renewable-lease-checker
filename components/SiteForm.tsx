@@ -19,7 +19,10 @@ const EMPTY_INPUT: SiteInput = {
 };
 
 const selectClass =
-  "mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-50";
+  "mt-2 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-base text-zinc-900 transition-colors focus:border-zinc-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400/60 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-200";
+
+/** 입력 묶음 하나를 감싸는 칸. 칸마다 가는 선으로 나눠 읽기 쉽게 한다. */
+const groupClass = "border-t border-line pt-6 first:border-t-0 first:pt-0";
 
 /** 두 가지 중 하나를 고르는 라디오 묶음 */
 function RadioGroup<T extends string | boolean>(props: {
@@ -31,24 +34,30 @@ function RadioGroup<T extends string | boolean>(props: {
 }) {
   const { legend, hint, value, options, onChange } = props;
   return (
+    <div className={groupClass}>
     <fieldset>
       <legend className="text-base font-medium text-zinc-900 dark:text-zinc-50">{legend}</legend>
-      {hint && <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">{hint}</p>}
-      <div className="mt-2 flex flex-wrap gap-x-6 gap-y-2">
+      {hint && <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{hint}</p>}
+      <div className="mt-3 flex flex-wrap gap-3">
         {options.map((option) => (
-          <label key={option.label} className="flex items-center gap-2 text-base text-zinc-800 dark:text-zinc-200">
+          // 라디오 버튼은 숨기고, 고른 칸 전체가 진하게 바뀌는 알약 모양 선택 버튼으로 보여 준다.
+          <label
+            key={option.label}
+            className="cursor-pointer rounded-full border border-line bg-white px-5 py-2 text-base text-zinc-800 transition-colors hover:border-zinc-500 has-[:checked]:border-zinc-900 has-[:checked]:bg-zinc-900 has-[:checked]:text-white has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-orange-400/60 dark:bg-zinc-900 dark:text-zinc-200 dark:has-[:checked]:border-zinc-100 dark:has-[:checked]:bg-zinc-100 dark:has-[:checked]:text-zinc-900"
+          >
             <input
               type="radio"
               name={legend}
               checked={value === option.value}
               onChange={() => onChange(option.value)}
-              className="h-4 w-4"
+              className="sr-only"
             />
             {option.label}
           </label>
         ))}
       </div>
     </fieldset>
+    </div>
   );
 }
 
@@ -74,7 +83,10 @@ export default function SiteForm(props: {
         onSubmit(input);
       }}
     >
-      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">부지 정보 입력</h2>
+      <h2 className="flex items-center gap-3 text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <span className="accent-bar h-5 w-1 rounded-full" aria-hidden="true" />
+        부지 정보 입력
+      </h2>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <label className="block text-base font-medium text-zinc-900 dark:text-zinc-50">
@@ -153,7 +165,7 @@ export default function SiteForm(props: {
         onChange={(value) => update("localPermitPossible", value)}
       />
 
-      <label className="block text-base font-medium text-zinc-900 dark:text-zinc-50">
+      <label className={`block text-base font-medium text-zinc-900 dark:text-zinc-50 ${groupClass}`}>
         참고 메모 (장기 대부 시 향후 활용 가능성·민원 소지)
         <span className="mt-0.5 block text-sm font-normal text-zinc-500 dark:text-zinc-400">
           결과와 함께 보여 줄 뿐 판정에는 쓰지 않습니다. 성명·연락처·주민등록번호 등 개인정보는 적지 마세요.
@@ -169,7 +181,7 @@ export default function SiteForm(props: {
         <button
           type="submit"
           disabled={loading}
-          className="self-start rounded-md bg-zinc-900 px-6 py-2.5 text-base font-medium text-white hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          className="accent-bar self-start rounded-full px-8 py-3 text-base font-semibold text-white shadow-sm transition-[filter,transform] hover:brightness-105 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-zinc-100"
         >
           {loading ? "확인하는 중..." : "판별하기"}
         </button>

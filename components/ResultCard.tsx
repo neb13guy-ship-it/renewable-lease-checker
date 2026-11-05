@@ -4,11 +4,23 @@
 
 import type { Citation, JudgeResult, Verdict } from "@/types/judge";
 
-/** 판정별 배지 색: 가능=초록, 불가=빨강, 추가 확인 필요=노랑 */
-const VERDICT_STYLE: Record<Verdict, string> = {
-  가능: "bg-green-100 text-green-900 dark:bg-green-950 dark:text-green-100",
-  불가: "bg-red-100 text-red-900 dark:bg-red-950 dark:text-red-100",
-  "추가 확인 필요": "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-100",
+/** 판정별 모양: 가능=초록, 불가=빨강, 추가 확인 필요=노랑. 색만으로 구분하지 않도록 기호도 함께 쓴다. */
+const VERDICT_STYLE: Record<Verdict, { panel: string; badge: string; mark: string }> = {
+  가능: {
+    panel: "border-green-300 bg-green-50 dark:border-green-800 dark:bg-green-950/50",
+    badge: "bg-green-600 text-white",
+    mark: "✓",
+  },
+  불가: {
+    panel: "border-red-300 bg-red-50 dark:border-red-800 dark:bg-red-950/50",
+    badge: "bg-red-600 text-white",
+    mark: "✕",
+  },
+  "추가 확인 필요": {
+    panel: "border-amber-300 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/50",
+    badge: "bg-amber-500 text-white",
+    mark: "!",
+  },
 };
 
 /** 조항 목록 한 묶음 (조항 번호와 원문 문장을 그대로 보여 준다) */
@@ -16,11 +28,17 @@ function CitationList({ title, items }: { title: string; items: Citation[] }) {
   if (items.length === 0) return null;
   return (
     <section>
-      <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">{title}</h3>
-      <ul className="mt-2 flex flex-col gap-2">
+      <h3 className="text-sm font-semibold tracking-wide text-zinc-500 dark:text-zinc-400">{title}</h3>
+      <ul className="mt-3 flex flex-col gap-2">
         {items.map((item) => (
-          <li key={item.article} className="rounded-md bg-zinc-50 px-4 py-3 text-base text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200">
-            <span className="font-medium">{item.article}.</span> “{item.text}”
+          <li
+            key={item.article}
+            className="flex gap-3 rounded-xl border border-line bg-white px-4 py-3 text-base text-zinc-800 dark:bg-zinc-900 dark:text-zinc-200"
+          >
+            <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900">
+              {item.article}
+            </span>
+            <span>“{item.text}”</span>
           </li>
         ))}
       </ul>
@@ -29,28 +47,34 @@ function CitationList({ title, items }: { title: string; items: Citation[] }) {
 }
 
 export default function ResultCard({ result }: { result: JudgeResult }) {
+  const style = VERDICT_STYLE[result.verdict];
   return (
-    <section aria-label="판별 결과" className="flex flex-col gap-5 rounded-lg border border-zinc-200 p-5 dark:border-zinc-700">
-      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">판별 결과</h2>
+    <section aria-label="판별 결과" className="rise-in flex flex-col gap-6 rounded-2xl border border-line bg-surface p-5 shadow-sm sm:p-8">
+      <h2 className="flex items-center gap-3 text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+        <span className="accent-bar h-5 w-1 rounded-full" aria-hidden="true" />
+        판별 결과
+      </h2>
 
-      <p className={`self-start rounded-full px-4 py-1.5 text-lg font-semibold ${VERDICT_STYLE[result.verdict]}`}>
-        {result.verdict}
-      </p>
-
-      <p className="text-base leading-7 text-zinc-800 dark:text-zinc-200">{result.reasonSummary}</p>
+      <div className={`rounded-xl border p-5 ${style.panel}`}>
+        <p className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-lg font-semibold ${style.badge}`}>
+          <span aria-hidden="true">{style.mark}</span>
+          {result.verdict}
+        </p>
+        <p className="mt-3 text-base leading-7 text-zinc-800 dark:text-zinc-200">{result.reasonSummary}</p>
+      </div>
 
       <CitationList title="기본검토사항" items={result.citations} />
       <CitationList title="제한 사유" items={result.restrictions} />
 
       {result.memo.trim() !== "" && (
         <section>
-          <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-50">참고 메모</h3>
-          <p className="mt-2 whitespace-pre-wrap text-base text-zinc-800 dark:text-zinc-200">{result.memo}</p>
+          <h3 className="text-sm font-semibold tracking-wide text-zinc-500 dark:text-zinc-400">참고 메모</h3>
+          <p className="mt-3 whitespace-pre-wrap text-base text-zinc-800 dark:text-zinc-200">{result.memo}</p>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">참고용이며 판정에는 쓰지 않았습니다.</p>
         </section>
       )}
 
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">1차 확인 결과입니다. 최종 판단은 담당자가 합니다.</p>
+      <p className="border-t border-line pt-4 text-sm text-zinc-500 dark:text-zinc-400">1차 확인 결과입니다. 최종 판단은 담당자가 합니다.</p>
     </section>
   );
 }
