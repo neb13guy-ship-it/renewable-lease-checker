@@ -56,7 +56,7 @@ export default function Home() {
               대부 가능 여부 판별기
             </h1>
             <p className="mt-3 text-base text-emerald-50/80">
-              업무지침에 따른 1차 확인용입니다.
+              업무지침 등에 따른 1차 확인용입니다.
               <br />
               최종 판단은 담당자가 합니다.
             </p>
