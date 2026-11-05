@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 신재생에너지 발전시설 대부 가능 여부 판별기
 
-## Getting Started
+국유재산 관리 담당 직원이 **부지 정보를 입력하면, 업무지침의 기본검토사항에 따라 신재생에너지 발전시설의 대부 가능 여부를 1차로 확인**해 주는 내부 업무용 웹 앱입니다.
+결과는 **가능 / 불가 / 추가 확인 필요** 세 가지이며, 근거가 된 기본검토사항(지침 원문)을 함께 보여 줍니다. **최종 판단은 항상 담당자가 합니다.**
 
-First, run the development server:
+> 이 프로젝트는 학습·실습용입니다. 사용한 업무지침은 작성자가 기억나는 내용을 바탕으로 정리한 **실습용 지침**이며, 실제 내부 지침 원문이 아닙니다.
+
+## 왜 만들었나
+
+대부 문의가 올 때마다 담당자는 긴 업무지침에서 조항을 찾고, 부지 현황과 하나씩 대조해야 합니다. 시간이 걸리고 담당자마다 해석이 달라질 수 있습니다. 이 앱은 그 1차 확인을 빠르고 일관되게 만드는 것을 목표로 합니다.
+
+## 주요 기능
+
+- **부지 정보 입력**: 지목(28개), 부지 현황(10개), 「국토계획법」 상 주거지역, 인접지 소유자, 기타 주변 민원 가능성, 지자체 허가 사전 확인 결과, 참고 메모
+- **대부 가능 여부 판별**: 가능 / 불가 / 추가 확인 필요
+- **기본검토사항(근거) 제시**: 모든 결과에 지침 번호와 원문 문장을 그대로 함께 표시
+
+### 판별 방식
+
+| 단계 | 내용 |
+|---|---|
+| 1 | 필수 입력 6개 중 비어 있는 것이 있으면 "추가 확인 필요" (단, 아래 "불가" 규칙이 우선) |
+| 2 | **코드가 먼저 확정하는 "불가"**: 「국토계획법」 상 주거지역에 해당 / 인접지 소유자가 신청자와 다름 (AI를 거치지 않음) |
+| 3 | **"추가 확인 필요"로 돌리는 사유**: 보존 지목·현황(전·답·과수원·임야 / 농지·임야), 활용성이 낮지 않은 현황, 주변 민원 가능성 있음, 지자체 허가 "아니오" |
+| 4 | 나머지는 AI가 업무지침과 대조해 판정. AI의 답에 근거가 없거나 규칙에 어긋나면 "추가 확인 필요"로 바꿈 |
+
+AI는 보조로만 쓰며, 지침에 없는 내용은 추측하지 않습니다. AI 호출이 실패하면 판정을 만들지 않고 다시 시도하라고 안내합니다.
+
+## 보안·개인정보
+
+- 성명·연락처 등 개인정보는 입력받지 않습니다. 인접지 소유자는 이름이 아니라 "같음 / 다름"만 선택합니다.
+- 입력한 내용과 판별 결과는 **서버에 저장하지 않습니다.**
+- API 키는 서버 코드에서만 사용하며 브라우저로 보내지 않습니다. `.env`는 저장소에 올라가지 않습니다.
+- 참고 메모는 판정에 쓰지 않고 AI에도 보내지 않습니다.
+- 배경의 일식 그림은 외부 주소에서 불러옵니다. 입력한 내용은 이 주소로 전송되지 않으며, 불러오지 못하면 코드로 그린 대체 배경이 나옵니다.
+
+## 기술 스택
+
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Zod(입력 검사) · OpenAI API(서버에서만 호출)
+
+## 직접 실행하기
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+프로젝트 폴더에 `.env` 파일을 만들고 OpenAI API 키를 넣습니다. (이 파일은 저장소에 올리지 않습니다.)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+OPENAI_API_KEY=여기에_본인_키
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev      # 개발 서버 (http://localhost:3000)
+npm run build    # 배포용 빌드
+npm run lint     # 코드 검사
+```
 
-## Learn More
+시험 사례 21건으로 판별 결과를 점검하려면 개발 서버를 켠 뒤 실행합니다. (AI를 실제로 호출하므로 비용이 조금 듭니다.)
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+node tests/run-cases.mjs http://localhost:3000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 폴더 구조
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+app/          화면(page.tsx)과 판별 API(api/judge/route.ts)
+components/   입력 폼, 결과 카드
+lib/          규칙 판정, AI 호출, 응답 점검, 입력 검사
+data/         업무지침 기본검토사항, 선택 목록
+types/        입력·결과 타입
+tests/        시험 사례와 점검 스크립트
+```
 
-## Deploy on Vercel
+## 기획 문서 (심사 자료)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [PRD.md](PRD.md): 서비스 기획서 (문제 정의, 목표, 기능, 범위, 보안)
+- [PLAN.md](PLAN.md): 계획서 (요구사항, 성공 기준, 위험, 작업 목록과 진행 상태)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 한계
+
+- 업무지침은 실습용이며, 시험 사례의 정답은 작성자가 정했고 담당자 검토를 받지 않았습니다.
+- 결과 인쇄·복사 기능은 아직 만들지 않았습니다.
+- 소재지로 지목·토지이용계획을 자동 조회하는 기능은 없습니다. (향후 과제)
+
+작성자: 꽃게맨
