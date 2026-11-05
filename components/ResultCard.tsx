@@ -74,7 +74,9 @@ export default function ResultCard({ result }: { result: JudgeResult }) {
         </section>
       )}
 
-      <p className="border-t border-line pt-4 text-sm text-zinc-500 dark:text-zinc-400">1차 확인 결과입니다. 최종 판단은 담당자가 합니다.</p>
+      <p className="rounded-xl border border-orange-300 bg-orange-50 px-4 py-3 text-base font-semibold text-orange-800 dark:border-orange-700 dark:bg-orange-950/50 dark:text-orange-200">
+        1차 확인 결과입니다. 최종 판단은 담당자가 합니다.
+      </p>
     </section>
   );
 }
