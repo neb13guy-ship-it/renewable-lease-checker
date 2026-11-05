@@ -50,16 +50,16 @@ export default function Home() {
         <header className="rise-in relative mb-6 overflow-hidden rounded-2xl bg-[var(--brand-deep)] px-6 py-8 text-white sm:px-10 sm:py-12">
           <HeroArt />
           <div className="relative max-w-[26rem]">
-            <p className="inline-flex items-center gap-2 text-xs font-medium tracking-[0.1em] text-emerald-100/80 uppercase">
-              <span className="accent-bar inline-block h-2 w-2 rounded-full" aria-hidden="true" />
-              국유재산 대부 · 신재생에너지 1차 확인
-            </p>
-            <h1 className="mt-3 text-3xl leading-tight font-semibold tracking-tight sm:text-4xl">
+            <h1 className="text-3xl leading-tight font-semibold tracking-tight sm:text-4xl">
               신재생에너지 발전시설
               <br />
               대부 가능 여부 판별기
             </h1>
-            <p className="mt-3 text-base text-emerald-50/80">업무지침에 따른 1차 확인용입니다. 최종 판단은 담당자가 합니다.</p>
+            <p className="mt-3 text-base text-emerald-50/80">
+              업무지침에 따른 1차 확인용입니다.
+              <br />
+              최종 판단은 담당자가 합니다.
+            </p>
           </div>
         </header>
 

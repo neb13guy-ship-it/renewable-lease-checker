@@ -48,7 +48,7 @@ function describeInput(input: SiteInput): string {
   return [
     `지목: ${input.landCategory || "미입력"}`,
     `부지 현황: ${input.siteStatus || "미입력"}`,
-    `국토계획법상 주거지역: ${yesNo(input.housingWithin200m, "해당함", "해당하지 않음")}`,
+    `「국토계획법」 상 주거지역: ${yesNo(input.housingWithin200m, "해당함", "해당하지 않음")}`,
     `인접지 소유자: ${owner}`,
     `기타 주변 민원 가능성(경관훼손, 전자파 노출, 반사광, 열섬현상, 주변 동식물 영향 등): ${yesNo(input.isProtectedZone, "있음", "없음")}`,
     `지자체 발전시설 허가 사전 확인 결과 가능 여부: ${yesNo(input.localPermitPossible, "예", "아니오")}`,

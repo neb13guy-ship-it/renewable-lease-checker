@@ -123,7 +123,7 @@ export default function SiteForm(props: {
       </div>
 
       <RadioGroup
-        legend="국토계획법상 주거지역"
+        legend="「국토계획법」 상 주거지역"
         hint="지역불문하고 인접지에 주택이 없으며 주택은 담당자가 판단해서 선택합니다."
         value={input.housingWithin200m}
         options={[
@@ -135,7 +135,7 @@ export default function SiteForm(props: {
 
       <RadioGroup
         legend="인접지 소유자"
-        hint="인접지가 여러 필지이면 한 필지라도 신청자와 다를 때 '다름'을 선택합니다. 이름은 입력하지 않습니다."
+        hint="인접지가 여러 필지이면 한 필지라도 신청자와 다를 때 '다름'을 선택합니다."
         value={input.neighborOwner}
         options={[
           { label: "신청자와 같음", value: "same" as const },

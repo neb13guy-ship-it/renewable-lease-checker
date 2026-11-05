@@ -19,7 +19,7 @@ export type RequiredFieldKey =
 export const REQUIRED_FIELDS: readonly { key: RequiredFieldKey; label: string }[] = [
   { key: "landCategory", label: "지목" },
   { key: "siteStatus", label: "부지 현황" },
-  { key: "housingWithin200m", label: "국토계획법상 주거지역 여부" },
+  { key: "housingWithin200m", label: "「국토계획법」 상 주거지역 여부" },
   { key: "neighborOwner", label: "인접지 소유자" },
   { key: "isProtectedZone", label: "기타 주변 민원 가능성" },
   { key: "localPermitPossible", label: "지자체 허가 가능 여부" },
@@ -67,7 +67,7 @@ export function findHardRejections(input: SiteInput): HardRejection[] {
   if (input.housingWithin200m === true) {
     rejections.push({
       citation: requireArticle(2),
-      reason: "국토계획법상 주거지역에 해당해 대부를 허용할 수 없습니다.",
+      reason: "「국토계획법」 상 주거지역에 해당해 대부를 허용할 수 없습니다.",
     });
   }
 
