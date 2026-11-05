@@ -10,14 +10,56 @@ const EMBERS = [
   { left: "63%", delay: "1.2s", duration: "10s" },
   { left: "78%", delay: "4s", duration: "12s" },
   { left: "88%", delay: "6.5s", duration: "9s" },
+  { left: "20%", delay: "3.2s", duration: "10s" },
+  { left: "50%", delay: "7s", duration: "11s" },
+  { left: "70%", delay: "0.6s", duration: "8s" },
+  { left: "94%", delay: "4.4s", duration: "12s" },
 ];
+
+/** 별 위치를 만드는 간단한 난수(같은 값이 나오므로 화면을 다시 그려도 별이 그대로다). */
+function makeRandom(seed: number) {
+  let s = seed;
+  return () => {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  };
+}
+
+/** 별빛: 화면 전체에 흩어진 별(box-shadow 목록). 은하수 띠 근처에는 별가루를 더 촘촘하게 둔다. */
+function makeStars(count: number, seed: number, dust: boolean): string {
+  const random = makeRandom(seed);
+  const stars: string[] = [];
+  for (let i = 0; i < count; i++) {
+    let x = random() * 100;
+    let y = random() * 78;
+    if (dust) {
+      // 은하수 띠(왼쪽 위에서 오른쪽 아래로 비스듬히)를 따라 모이게 한다.
+      const t = random();
+      const spread = (random() + random() + random() - 1.5) * 9;
+      x = t * 100;
+      y = 18 + t * 30 + spread;
+    }
+    const tone = random() > 0.75 ? "#ffd9b0" : random() > 0.5 ? "#cfd8ff" : "#ffffff";
+    stars.push(`${x.toFixed(1)}vw ${y.toFixed(1)}vh 0 0 ${tone}`);
+  }
+  return stars.join(',');
+}
+
+const STARS_SMALL = makeStars(90, 11, false);
+const STARS_BRIGHT = makeStars(26, 23, false);
+const STARS_DUST = makeStars(160, 37, true);
 
 /** 배경 장식: 화면 맨 아래에서 떠오르는 일식과 불씨. 글자 뒤에 고정되며 읽기 도구에는 숨긴다. */
 function EclipseBackdrop() {
   return (
     <div className="eclipse-layer" aria-hidden="true">
       <div className="eclipse-plate" />
+      <div className="eclipse-heat" />
       <div className="eclipse-veil" />
+      <div className="milkyway" />
+      <div className="star-layer" style={{ boxShadow: STARS_DUST, opacity: 0.85 }} />
+      <div className="star-layer" style={{ boxShadow: STARS_SMALL, opacity: 1 }} />
+      <div className="star-layer star-twinkle" style={{ boxShadow: STARS_BRIGHT, width: 2, height: 2 }} />
       {EMBERS.map((ember) => (
         <span key={ember.left} className="ember" style={{ left: ember.left, animationDelay: ember.delay, animationDuration: ember.duration }} />
       ))}

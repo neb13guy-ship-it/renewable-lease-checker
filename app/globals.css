@@ -49,32 +49,114 @@ body {
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: max(100vw, 1100px);
+  width: max(115vw, 1300px);
   aspect-ratio: 1448 / 1086;
   transform: translateX(-50%);
-  opacity: 0.85;
+  opacity: 1;
+  filter: saturate(1.15) brightness(1.05);
+  animation: corona-breathe 7s ease-in-out infinite;
   /* 앞 그림이 불러와지지 않으면 뒤의 그라데이션이 대신 일식 느낌을 낸다. */
   background:
     url("https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/b4b7e033-b082-4f09-8ec4-2fabca30c4b4.webp") center bottom / 100% 100% no-repeat,
     radial-gradient(ellipse 50% 42% at 50% 112%, #000 0 60%, #ee7f20 66%, rgba(238, 127, 32, 0.35) 74%, transparent 90%);
 }
 
+/* 일식 뒤에서 번지는 열기(태양열)의 빛. 천천히 커졌다 작아진다. */
+.eclipse-heat {
+  position: absolute;
+  left: 50%;
+  bottom: -18vh;
+  width: min(150vw, 1900px);
+  height: 75vh;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse 50% 60% at 50% 100%, rgba(238, 127, 32, 0.55), rgba(236, 122, 28, 0.22) 45%, transparent 72%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: heat-pulse 6s ease-in-out infinite;
+}
+
+@keyframes heat-pulse {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.07);
+  }
+}
+
+@keyframes corona-breathe {
+  0%,
+  100% {
+    filter: saturate(1.1) brightness(1);
+  }
+  50% {
+    filter: saturate(1.3) brightness(1.18);
+  }
+}
+
 /* 글자를 가리지 않도록 일식 위를 살짝 어둡게 덮는다. */
 .eclipse-veil {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.65));
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.12) 50%, rgba(0, 0, 0, 0.3));
+}
+
+/* 은하수: 비스듬히 흐르는 은은한 빛의 띠 */
+.milkyway {
+  position: absolute;
+  left: -15%;
+  top: 6%;
+  width: 130%;
+  height: 34vh;
+  transform: rotate(24deg);
+  background:
+    radial-gradient(ellipse 40% 50% at 30% 50%, rgba(190, 170, 255, 0.26), transparent 70%),
+    radial-gradient(ellipse 45% 55% at 62% 50%, rgba(255, 205, 165, 0.24), transparent 70%),
+    linear-gradient(90deg, transparent, rgba(220, 215, 255, 0.12) 25%, rgba(255, 225, 200, 0.14) 60%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 50%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 50%, transparent);
+  filter: blur(26px);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+
+/* 별빛: 1픽셀 점 하나에 그림자로 여러 별을 찍어 둔다. */
+.star-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  border-radius: 9999px;
+  mix-blend-mode: screen;
+}
+
+.star-twinkle {
+  animation: twinkle 4.5s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* 어둠 속의 오렌지 불씨 (아주 천천히 떠오른다) */
 .ember {
   position: absolute;
   bottom: 12%;
-  width: 3px;
-  height: 3px;
+  width: 4px;
+  height: 4px;
   border-radius: 9999px;
   background: var(--accent-light);
-  box-shadow: 0 0 8px 2px var(--glow);
+  box-shadow: 0 0 12px 3px rgba(242, 138, 42, 0.6);
   opacity: 0;
   animation: ember-rise 9s ease-in infinite;
 }
@@ -88,7 +170,7 @@ body {
     opacity: 0.9;
   }
   100% {
-    transform: translateY(-38vh) scale(0.4);
+    transform: translateY(-55vh) scale(0.3);
     opacity: 0;
   }
 }
@@ -207,6 +289,12 @@ body {
 /* 움직임을 줄이는 설정이면 등장 효과와 불씨를 끈다. */
 @media (prefers-reduced-motion: reduce) {
   .rise-in {
+    animation: none;
+  }
+  .star-twinkle,
+  .ember,
+  .eclipse-heat,
+  .eclipse-plate {
     animation: none;
   }
   .ember {
