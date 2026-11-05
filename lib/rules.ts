@@ -98,9 +98,9 @@ export const PROTECTED_SITE_STATUSES: readonly string[] = ["농지", "임야"];
 
 /**
  * 활용성이 낮지 않다고 보는 부지 현황. 지침 1번은 "일반적인 용도로의 활용성이 현저히 낮은 재산"이어야 대부할 수 있다고 하므로,
- * 이런 현황은 "가능"으로 판정하지 않고 "추가 확인 필요"로 둔다. (담당자 결정: 공공용지도 활용성이 낮지 않은 쪽으로 본다.)
+ * 이런 현황은 "가능"으로 판정하지 않고 "추가 확인 필요"로 둔다. (담당자 결정: 공공용지는 활용성이 낮은 쪽으로 본다.)
  */
-export const HIGH_UTILITY_SITE_STATUSES: readonly string[] = ["대지", "공업용지", "상업용지", "주거용지", "개발용지", "공공용지"];
+export const HIGH_UTILITY_SITE_STATUSES: readonly string[] = ["대지", "공업용지", "상업용지", "주거용지", "개발용지"];
 
 /**
  * 제한 사유를 모두 돌려준다. 하나도 없으면 빈 목록이다.

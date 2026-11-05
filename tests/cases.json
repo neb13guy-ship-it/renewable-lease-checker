@@ -34,7 +34,7 @@
 
     { "id": 18, "group": "모든 조건 통과", "name": "지목 대, 현황 기타", "input": { "landCategory": "대", "siteStatus": "유휴부지", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "가능" },
     { "id": 19, "group": "모든 조건 통과", "name": "지목 공장용지, 현황 수변·습지", "input": { "landCategory": "공장용지", "siteStatus": "수변·습지", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "가능" },
-    { "id": 20, "group": "모든 조건 통과", "name": "지목 잡종지, 현황 유휴부지", "input": { "landCategory": "잡종지", "siteStatus": "유휴부지", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "가능" },
+    { "id": 20, "group": "모든 조건 통과", "name": "지목 잡종지, 현황 공공용지", "input": { "landCategory": "잡종지", "siteStatus": "공공용지", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "가능" },
 
     { "id": 21, "group": "활용성 높은 현황", "name": "현황 상업용지(활용성 낮지 않음), 나머지는 모두 통과 조건", "input": { "landCategory": "대", "siteStatus": "상업용지", "housingWithin200m": false, "neighborOwner": "same", "isProtectedZone": false, "localPermitPossible": true }, "expected": "추가 확인 필요" }
   ]
