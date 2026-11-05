@@ -1,53 +1,198 @@
 @import "tailwindcss";
 
-/* 디자인: 국유지(대지·숲의 짙은 초록)와 신재생에너지(햇빛의 황금빛)를 바탕으로 한 차분한 공공 업무용 색 */
+/* 디자인: Eclipsio 풍 프리미엄 다크 테마 — 순수한 검은 우주 + 일식의 오렌지빛.
+   색·간격 같은 값은 아래 토큰으로 한 곳에서 관리한다. */
 :root {
-  --background: #eef1ea;
-  --foreground: #14201a;
-  --surface: #fbfcf9;
-  --line: rgba(20, 50, 35, 0.14);
-  --accent-from: #f5a623;
-  --accent-to: #2f9e6b;
-  --brand-deep: #123b2a;
+  --background: #000000;
+  --foreground: #ffffff;
+  --bg-sub: #090909;
+  --card: #111111;
+  --text-dim: #bcbcbe;
+  --text-mute: #8a8a8c;
+  --accent: #ee7f20;
+  --accent-light: #f28a2a;
+  --accent-dark: #ec7a1c;
+  --glow: rgba(238, 127, 32, 0.35);
+  --glass-border: rgba(255, 190, 140, 0.16);
+  --line: rgba(255, 190, 140, 0.14);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
   --color-line: var(--line);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f1512;
-    --foreground: #e8efe9;
-    --surface: #17201b;
-    --line: rgba(232, 239, 233, 0.16);
-    --brand-deep: #0b2a1d;
-  }
+html {
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  /* 한글이 또렷하게 보이는 글꼴을 먼저 쓴다. (글꼴 파일을 따로 내려받지 않는다.) */
-  font-family: var(--font-geist-sans), "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
+  font-family: var(--font-inter), "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
   line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* 주황→분홍 포인트 선 */
+/* ───────── 배경: 아래에서 떠오르는 일식 ───────── */
+.eclipse-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.eclipse-plate {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: max(100vw, 1100px);
+  aspect-ratio: 1448 / 1086;
+  transform: translateX(-50%);
+  opacity: 0.85;
+  /* 앞 그림이 불러와지지 않으면 뒤의 그라데이션이 대신 일식 느낌을 낸다. */
+  background:
+    url("https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/b4b7e033-b082-4f09-8ec4-2fabca30c4b4.webp") center bottom / 100% 100% no-repeat,
+    radial-gradient(ellipse 50% 42% at 50% 112%, #000 0 60%, #ee7f20 66%, rgba(238, 127, 32, 0.35) 74%, transparent 90%);
+}
+
+/* 글자를 가리지 않도록 일식 위를 살짝 어둡게 덮는다. */
+.eclipse-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.65));
+}
+
+/* 어둠 속의 오렌지 불씨 (아주 천천히 떠오른다) */
+.ember {
+  position: absolute;
+  bottom: 12%;
+  width: 3px;
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--accent-light);
+  box-shadow: 0 0 8px 2px var(--glow);
+  opacity: 0;
+  animation: ember-rise 9s ease-in infinite;
+}
+
+@keyframes ember-rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-38vh) scale(0.4);
+    opacity: 0;
+  }
+}
+
+/* ───────── 공통 부품 ───────── */
+/* 어두운 유리 카드 */
+.glass {
+  background: linear-gradient(180deg, rgba(20, 20, 20, 0.78), rgba(6, 6, 6, 0.82));
+  border: 1px solid var(--glass-border);
+  border-radius: 1.25rem;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 0 40px -12px var(--glow);
+}
+
+/* 주황 그라데이션 (포인트 선·버튼) */
 .accent-bar {
-  background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+  background: linear-gradient(90deg, var(--accent-light), var(--accent-dark));
 }
 
-/* 눈에 띄지 않게 부드러운 등장 효과 (움직임을 줄이는 설정이면 끈다) */
+/* 입력칸(선택 목록·글 상자) */
+.field {
+  margin-top: 0.5rem;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.55);
+  padding: 0.65rem 0.85rem;
+  color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.field:hover {
+  border-color: rgba(238, 127, 32, 0.45);
+}
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(238, 127, 32, 0.25);
+}
+.field::placeholder {
+  color: var(--text-mute);
+}
+.field option {
+  background: #111;
+  color: #fff;
+}
+
+/* 알약 모양 선택 버튼 */
+.pill {
+  cursor: pointer;
+  border-radius: 9999px;
+  border: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.5rem 1.25rem;
+  color: var(--text-dim);
+  transition: border-color 0.2s, background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.pill:hover {
+  border-color: rgba(238, 127, 32, 0.6);
+  color: #fff;
+}
+.pill:has(:checked) {
+  border-color: var(--accent);
+  background: linear-gradient(180deg, var(--accent-light), var(--accent-dark));
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 18px -2px var(--glow);
+}
+.pill:has(:focus-visible) {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+/* 주 버튼 */
+.btn-primary {
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: linear-gradient(180deg, var(--accent-light), var(--accent-dark));
+  padding: 0.8rem 2.2rem;
+  font-weight: 600;
+  color: #fff;
+  transition: box-shadow 0.25s, transform 0.15s, filter 0.2s;
+}
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 0 28px 2px var(--glow);
+  filter: brightness(1.06);
+}
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.btn-primary:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+.btn-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ───────── 움직임 ───────── */
 @keyframes rise-in {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -56,11 +201,15 @@ body {
 }
 
 .rise-in {
-  animation: rise-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: rise-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+/* 움직임을 줄이는 설정이면 등장 효과와 불씨를 끈다. */
 @media (prefers-reduced-motion: reduce) {
   .rise-in {
     animation: none;
+  }
+  .ember {
+    display: none;
   }
 }

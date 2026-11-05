@@ -47,7 +47,7 @@ export default function JudgeScreen() {
       <SiteForm onSubmit={handleSubmit} loading={loading} />
       <div ref={resultRef} aria-live="polite">
         {error && (
-          <p role="alert" className="rounded-xl border border-red-300 bg-red-50 px-4 py-3 text-base text-red-900 dark:bg-red-950 dark:text-red-100">
+          <p role="alert" className="rounded-xl border border-red-500/50 bg-red-500/10 px-4 py-3 text-base text-red-200">
             {error}
           </p>
         )}

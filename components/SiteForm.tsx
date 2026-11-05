@@ -19,7 +19,7 @@ const EMPTY_INPUT: SiteInput = {
 };
 
 const selectClass =
-  "mt-2 w-full rounded-lg border border-line bg-white px-3 py-2.5 text-base text-zinc-900 transition-colors focus:border-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/70 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-200";
+  "field";
 
 /** 입력 묶음 하나를 감싸는 칸. 칸마다 가는 선으로 나눠 읽기 쉽게 한다. */
 const groupClass = "border-t border-line pt-6 first:border-t-0 first:pt-0";
@@ -36,14 +36,14 @@ function RadioGroup<T extends string | boolean>(props: {
   return (
     <div className={groupClass}>
     <fieldset>
-      <legend className="text-base font-medium text-zinc-900 dark:text-zinc-50">{legend}</legend>
-      {hint && <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{hint}</p>}
+      <legend className="text-base font-medium text-white">{legend}</legend>
+      {hint && <p className="mt-1 text-sm text-[var(--text-mute)]">{hint}</p>}
       <div className="mt-3 flex flex-wrap gap-3">
         {options.map((option) => (
           // 라디오 버튼은 숨기고, 고른 칸 전체가 진하게 바뀌는 알약 모양 선택 버튼으로 보여 준다.
           <label
             key={option.label}
-            className="cursor-pointer rounded-full border border-line bg-white px-5 py-2 text-base text-zinc-800 transition-colors hover:border-emerald-700 has-[:checked]:border-[var(--brand-deep)] has-[:checked]:bg-[var(--brand-deep)] has-[:checked]:text-white has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-amber-400/70 dark:bg-zinc-900 dark:text-zinc-200 dark:has-[:checked]:border-zinc-100 dark:has-[:checked]:bg-zinc-100 dark:has-[:checked]:text-zinc-900"
+            className="pill text-base"
           >
             <input
               type="radio"
@@ -83,13 +83,13 @@ export default function SiteForm(props: {
         onSubmit(input);
       }}
     >
-      <h2 className="flex items-center gap-3 text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+      <h2 className="flex items-center gap-3 text-xl font-semibold text-white">
         <span className="accent-bar h-5 w-1 rounded-full" aria-hidden="true" />
         부지 정보 입력
       </h2>
 
       <div className="grid gap-6 sm:grid-cols-2">
-        <label className="block text-base font-medium text-zinc-900 dark:text-zinc-50">
+        <label className="block text-base font-medium text-white">
           지목
           <select
             className={selectClass}
@@ -105,7 +105,7 @@ export default function SiteForm(props: {
           </select>
         </label>
 
-        <label className="block text-base font-medium text-zinc-900 dark:text-zinc-50">
+        <label className="block text-base font-medium text-white">
           부지 현황
           <select
             className={selectClass}
@@ -165,9 +165,9 @@ export default function SiteForm(props: {
         onChange={(value) => update("localPermitPossible", value)}
       />
 
-      <label className={`block text-base font-medium text-zinc-900 dark:text-zinc-50 ${groupClass}`}>
+      <label className={`block text-base font-medium text-white ${groupClass}`}>
         참고 메모 (장기 대부 시 향후 활용 가능성·민원 소지)
-        <span className="mt-0.5 block text-sm font-normal text-zinc-500 dark:text-zinc-400">
+        <span className="mt-0.5 block text-sm font-normal text-[var(--text-mute)]">
           결과와 함께 보여 줄 뿐 판정에는 쓰지 않습니다. 성명·연락처·주민등록번호 등 개인정보는 적지 마세요.
         </span>
         <textarea
@@ -181,7 +181,7 @@ export default function SiteForm(props: {
         <button
           type="submit"
           disabled={loading}
-          className="accent-bar self-start rounded-full px-8 py-3 text-base font-semibold text-white shadow-sm transition-[filter,transform] hover:brightness-105 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 dark:focus-visible:ring-zinc-100"
+          className="btn-primary self-start text-base"
         >
           {loading ? "확인하는 중..." : "판별하기"}
         </button>
