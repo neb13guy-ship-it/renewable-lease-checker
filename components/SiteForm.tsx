@@ -111,12 +111,12 @@ export default function SiteForm(props: {
       </div>
 
       <RadioGroup
-        legend="반경 200m 이내 주택"
-        hint="주택의 범위는 지침에 따라 담당자가 판단해 선택합니다."
+        legend="국토계획법상 주거지역"
+        hint="지역불문하고 인접지에 주택이 없으며 주택은 담당자가 판단해서 선택합니다."
         value={input.housingWithin200m}
         options={[
-          { label: "있음", value: true },
-          { label: "없음", value: false },
+          { label: "해당함", value: true },
+          { label: "해당하지 않음", value: false },
         ]}
         onChange={(value) => update("housingWithin200m", value)}
       />
@@ -133,11 +133,12 @@ export default function SiteForm(props: {
       />
 
       <RadioGroup
-        legend="토지이용계획 상 보전녹지지역 등 자연환경보호를 위한 현상보존필요지역인가요?"
+        legend="기타 주변 민원 가능성"
+        hint="경관훼손, 전자파 노출, 반사광, 열섬현상, 주변 동식물 영향 등"
         value={input.isProtectedZone}
         options={[
-          { label: "예", value: true },
-          { label: "아니오", value: false },
+          { label: "있음", value: true },
+          { label: "없음", value: false },
         ]}
         onChange={(value) => update("isProtectedZone", value)}
       />

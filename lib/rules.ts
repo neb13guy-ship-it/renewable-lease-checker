@@ -19,9 +19,9 @@ export type RequiredFieldKey =
 export const REQUIRED_FIELDS: readonly { key: RequiredFieldKey; label: string }[] = [
   { key: "landCategory", label: "지목" },
   { key: "siteStatus", label: "부지 현황" },
-  { key: "housingWithin200m", label: "반경 200m 이내 주택 존재 여부" },
+  { key: "housingWithin200m", label: "국토계획법상 주거지역 여부" },
   { key: "neighborOwner", label: "인접지 소유자" },
-  { key: "isProtectedZone", label: "보존 지역 여부" },
+  { key: "isProtectedZone", label: "기타 주변 민원 가능성" },
   { key: "localPermitPossible", label: "지자체 허가 가능 여부" },
 ];
 
@@ -67,15 +67,15 @@ export function findHardRejections(input: SiteInput): HardRejection[] {
   if (input.housingWithin200m === true) {
     rejections.push({
       citation: requireArticle(2),
-      reason: "반경 200m 이내에 주택이 있어 대부를 허용할 수 없습니다.",
+      reason: "국토계획법상 주거지역에 해당해 대부를 허용할 수 없습니다.",
     });
   }
 
-  // Plan SC: FR-04 — 인접지 소유자가 신청자와 다르면 장기 대부 "불가" (지침 제4조)
+  // Plan SC: FR-04 — 인접지 소유자가 신청자와 다르면 장기 대부 "불가" (기본검토사항 3 이해관계자 확인)
   // 인접지가 여러 필지이면 한 필지라도 다를 때 "다름"으로 입력하는 것이 전제다. (PRD §6)
   if (input.neighborOwner === "different") {
     rejections.push({
-      citation: requireArticle(4),
+      citation: requireArticle(3),
       reason: "인접지 소유자가 신청자와 달라 장기 대부를 허용할 수 없습니다. (인접지 소유자에게 수의매각할 가능성)",
     });
   }
@@ -109,18 +109,19 @@ export function findRestrictions(input: SiteInput): Restriction[] {
     });
   }
 
-  // Plan SC: FR-05 — 토지이용계획 상 현상보존필요지역은 제한 (지침 제3조)
+  // Plan SC: FR-05 — 기타 주변 민원 가능성이 있으면 제한 (기본검토사항 2 민원발생 가능성)
+  // (입력칸 이름 isProtectedZone은 예전 '보존 지역' 질문에서 온 것이며, 지금은 '기타 주변 민원 가능성'을 담는다.)
   if (input.isProtectedZone === true) {
     restrictions.push({
-      citation: requireArticle(3),
-      reason: "토지이용계획 상 보전녹지지역 등 현상보존필요지역에 해당해 대부가 제한될 수 있습니다.",
+      citation: requireArticle(2),
+      reason: "경관훼손, 전자파 노출 등 기타 주변 민원 가능성이 있어 대부가 제한될 수 있습니다.",
     });
   }
 
-  // Plan SC: 결정 사항 — 지자체 허가 가능 여부가 "아니오"이면 불가가 아니라 "추가 확인 필요" (지침 제5조)
+  // Plan SC: 결정 사항 — 지자체 허가 가능 여부가 "아니오"이면 불가가 아니라 "추가 확인 필요" (기본검토사항 4 지자체 사전확인)
   if (input.localPermitPossible === false) {
     restrictions.push({
-      citation: requireArticle(5),
+      citation: requireArticle(4),
       reason: "지자체의 발전시설 허가 등이 가능한지 사전 확인 결과가 '아니오'라 추가 확인이 필요합니다.",
     });
   }

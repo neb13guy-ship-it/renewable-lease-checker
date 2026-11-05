@@ -30,14 +30,14 @@ const SYSTEM_PROMPT = `당신은 국유재산 대부 업무를 돕는 보조 도
 규칙:
 - 지침에 없는 내용은 추측하지 않습니다. 지침만으로 판단하기 어려우면 "추가 확인 필요"로 답합니다.
 - 판정은 "가능", "불가", "추가 확인 필요" 중 하나입니다.
-- 지침이 "제한한다"고만 한 경우는 "불가"로 확정하지 말고 "추가 확인 필요"로 답합니다.
-- articles에는 반드시 1개 이상의 지침 조항 번호(숫자)를 담습니다. 빈 목록으로 답하지 않습니다. 존재하지 않는 조항 번호를 만들지 않습니다.
+- 지침이 "제한"이라고만 한 경우는 "불가"로 확정하지 말고 "추가 확인 필요"로 답합니다.
+- articles에는 반드시 1개 이상의 기본검토사항 번호(숫자)를 담습니다. 빈 목록으로 답하지 않습니다. 존재하지 않는 조항 번호를 만들지 않습니다.
 - 모든 조항을 확인한 결과 문제가 없어 "가능"이면 확인한 조항 번호를 모두 담습니다. 그 밖의 판정이면 판정의 직접적인 근거가 된 조항만 담습니다.
 - reasonSummary는 담당자가 이해하기 쉬운 한두 문장의 한국어로 씁니다.
 - 반드시 {"verdict": "...", "articles": [숫자, ...], "reasonSummary": "..."} 형태의 JSON만 답합니다.
 
-[업무지침]
-${GUIDELINE_ARTICLES.map((item) => `제${item.article}조(${item.title}) ${item.text}`).join("\n")}`;
+[업무지침 기본검토사항]
+${GUIDELINE_ARTICLES.map((item) => `${item.article}. ${item.title}: ${item.text}`).join("\n")}`;
 
 const yesNo = (value: boolean | null, yes: string, no: string) => (value === null ? "미입력" : value ? yes : no);
 
@@ -47,9 +47,9 @@ function describeInput(input: SiteInput): string {
   return [
     `지목: ${input.landCategory || "미입력"}`,
     `부지 현황: ${input.siteStatus || "미입력"}`,
-    `반경 200m 이내 주택: ${yesNo(input.housingWithin200m, "있음", "없음")}`,
+    `국토계획법상 주거지역: ${yesNo(input.housingWithin200m, "해당함", "해당하지 않음")}`,
     `인접지 소유자: ${owner}`,
-    `토지이용계획 상 보전녹지지역 등 자연환경보호를 위한 현상보존필요지역:${yesNo(input.isProtectedZone, "예", "아니오")}`,
+    `기타 주변 민원 가능성(경관훼손, 전자파 노출, 반사광, 열섬현상, 주변 동식물 영향 등): ${yesNo(input.isProtectedZone, "있음", "없음")}`,
     `지자체 발전시설 허가 사전 확인 결과 가능 여부: ${yesNo(input.localPermitPossible, "예", "아니오")}`,
   ].join("\n");
 }

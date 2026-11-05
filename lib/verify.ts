@@ -31,7 +31,9 @@ function mergeCitations(...lists: Citation[][]): Citation[] {
  */
 export function verifyAiAnswer(answer: AiAnswer, restrictions: Restriction[], memo: string): JudgeResult {
   const restrictionCitations = restrictions.map((item) => item.citation);
-  const restrictionReasons = restrictions.map((item) => item.reason).join(" ");
+  // 지목·보존 지역이 같은 기본검토사항(1)에 걸리면 같은 번호가 두 번 나오므로 번호 기준으로 한 번만 보여 준다.
+  const uniqueCitations = toCitations(restrictionCitations.map((item) => item.article));
+  const restrictionReasons =restrictions.map((item) => item.reason).join(" ");
   const aiCitations = toCitations(answer.articles);
   const hasUnknownArticle = answer.articles.some((article) => !findArticle(article));
 
@@ -39,7 +41,7 @@ export function verifyAiAnswer(answer: AiAnswer, restrictions: Restriction[], me
   const hold = (why: string): JudgeResult => ({
     verdict: "추가 확인 필요",
     citations: mergeCitations(aiCitations, restrictionCitations),
-    restrictions: restrictionCitations,
+    restrictions: uniqueCitations,
     reasonSummary: [restrictionReasons, why].filter(Boolean).join(" "),
     memo,
   });
@@ -73,7 +75,7 @@ export function verifyAiAnswer(answer: AiAnswer, restrictions: Restriction[], me
   return {
     verdict: "추가 확인 필요",
     citations: mergeCitations(aiCitations, restrictionCitations),
-    restrictions: restrictionCitations,
+    restrictions: uniqueCitations,
     reasonSummary: [restrictionReasons, answer.reasonSummary].filter(Boolean).join(" "),
     memo,
   };
